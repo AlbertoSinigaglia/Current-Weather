@@ -1,38 +1,37 @@
-var url =
-  "https://api.openweathermap.org/data/2.5/weather?q=Villatora&APPID=5fa9a800de7bb9bcd2867f52a5d3d754&lang=it&units=metric";
+var api1 = "https://www.metaweather.com/api/location/search/?query=";
+var api2 = "https://www.metaweather.com/api/location/";
 
-var name;
-var lastOne = "Villatora";
 
-async function getData() {
-  var result = await fetch(url);
+async function getId() {
+  var city = document.getElementById("city").value;
+  var result = await fetch(api1 + city, { mode: "no-cors" });
+  console.log(result);
+
   return result;
-}
-
-function upDateCity() {
-  var textBox = document.getElementById("city");
-  url = url.replace(lastOne, textBox.value);
-  lastOne = textBox.value;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   var submit = document.getElementById("submit");
   var div = document.getElementById("result");
   submit.addEventListener("click", () => {
-    upDateCity();
-    getData()
+
+    getId()
       .then((response) => {
         if (!response.ok) {
           throw new Error("You probabily misspelled the city name!");
         } else {
           return response.json();
         }
-      })
+      })/*
       .then((data) => {
-        div.innerText = data.weather[0].description;
+        return data;
       })
       .catch((err) => {
         div.innerText = err.message;
-      });
+      })
+      .then(woeid => {
+        div.innerText = woeid;
+        //getWeather();
+      });*/
   });
 });
