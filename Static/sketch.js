@@ -15,7 +15,31 @@ var lastCity = " ";
 var city;
 var cache = [];
 document.addEventListener("DOMContentLoaded", () => {
-    var submit = document.getElementById("submit");
+	var submit = document.getElementById("submit");
+	
+
+	
+	navigator.geolocation.getCurrentPosition((pos => {
+		fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`+ appid + lang + metric)
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error("You probabily misspelled the city name!");
+				} else {
+					return response.json();
+				}
+			})
+			.then(body => {
+				document.getElementById("city").value = body.name.trim().toLowerCase();
+				document.getElementById("submit").click();
+			});
+	}), (err => console.log(err)),{
+		enableHighAccuracy: false,
+		timeout: 10000,
+		maximumAge: 0
+	});
+
+
+
     submit.addEventListener("click", () => {
         clearPage();
         let promise = cache[city] ?  
@@ -24,7 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!response.ok) {
                     throw new Error("You probabily misspelled the city name!");
                 } else {
-					console.log('a fetch is executed');
                     return response.json();
                 }
             }).then(body => {
@@ -66,21 +89,5 @@ function generateTemperatures(main) {
 function clearPage() {
     document.getElementById('icon').innerHTML = "";
     document.getElementById('error').innerText = "";
-    city = document.getElementById("city").value;
+    city = (document.getElementById("city").value || "").trim().toLowerCase();
 }
-navigator.geolocation.getCurrentPosition((pos => {
-	console.log(pos)
-	fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`+ appid + lang + metric)
-		.then((response) => {
-			if (!response.ok) {
-				throw new Error("You probabily misspelled the city name!");
-			} else {
-				console.log('a fetch is executed');
-				return response.json();
-			}
-		})
-		.then(body => {
-			document.getElementById("city").value = body.name;
-			document.getElementById("submit").click();
-		});
-}));
