@@ -4,6 +4,7 @@ body {
 }
 
 .header {
+    margin-top: 1em;
     display: inline-block;
 }
 
@@ -38,7 +39,7 @@ th, td {
 }
 
 #min {
-    min-width: 30px;
+    min-width: 35px;
 }
 
 @media only screen and (max-width: 449px) {
@@ -63,4 +64,8 @@ th, td {
     .header {
         display: block;
     }
+
+    #min {
+    min-width: 80px;
+}
 }
