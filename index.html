@@ -9,14 +9,45 @@
   </head>
   <body>
 
-    <p>
-      City: <input id="city" value="London"></input>
+    <div class="header">
+      City: <input id="city" value=""></input>
     </br>
       <button id='submit'>Submit</button>
-    </p>
+    </div>
 
-    <div id="result"></div>
-    
+    <div class="table">
+      <caption><h2>Previsioni Meteo</h2></caption>
+
+      <table>
+        <tr>
+          <th colspan= "2" id="day">
+            Oggi
+          </th>
+        </tr>
+      
+        <tr>
+          <th>Descrizione:</th>
+          <td id="result"></td>
+        </tr>
+      
+        <tr>
+          <th>Rappresentazione:</th>
+          <td id="icon">
+            
+          </td>
+        </tr>
+      
+        <tr>
+          <th rowspan="2" style="padding:12px">Temperatura:</th>
+          <td id="min"></td>
+        </tr>
+        <tr>
+          <td id="max"></td>
+        </tr>
+      </table>
+
+      <div id="error"></div>
+    </div>
 
   </body>
 </html>

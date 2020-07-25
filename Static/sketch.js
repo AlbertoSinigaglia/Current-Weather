@@ -11,26 +11,34 @@ var metric = "&units=metric";
 var source = "http://openweathermap.org/img/wn/";
 var format = "@2x.png";
 
+var lastCity = " ";
+var city;
 document.addEventListener("DOMContentLoaded", () => {
   var submit = document.getElementById("submit");
-  var div = document.getElementById("result");
-  var city = document.getElementById("city").value;
   submit.addEventListener("click", () => {
-    getData(city)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("You probabily misspelled the city name!");
-        } else {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        div.innerText = data.weather[0].description;
-        generateIcon(data.weather[0].icon, div);
-      })
-      .catch((err) => {
-        div.innerText = err.message;
-      });
+    clearPage();
+
+    if (city === lastCity ) {
+      document.getElementById('error').innerText = "You insert the same city name";
+    } else {
+      lastCity = city;
+      getData(city)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("You probabily misspelled the city name!");
+          } else {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          generateDescription(data.weather[0].description)
+          generateIcon(data.weather[0].icon);
+          generateTemperatures(data.main);
+        })
+        .catch((err) => {
+          document.getElementById('error').innerText = err.message;
+        });
+    }
   });
 });
 
@@ -39,10 +47,24 @@ async function getData(city) {
   return result;
 }
 
-function generateIcon(iconId, div) {
+function generateIcon(iconId) {
   var image = document.createElement('img');
   image.setAttribute('src', source + iconId + format);
-  image.setAttribute('Alt', "Rappresentazione grafica");
-  console.log(image);
-  div.appendChild(image);
+  image.setAttribute('Alt', "Weather Icon");
+  document.getElementById('icon').appendChild(image);
+}
+
+function generateDescription(description) {
+  document.getElementById('result').innerText = description;
+}
+
+function generateTemperatures(main) {
+  document.getElementById('min').innerText = "Min: " + main.temp_min;
+  document.getElementById('max').innerText = "Max: " + main.temp_max;
+}
+
+function clearPage() {
+  document.getElementById('icon').innerHTML = "";
+  document.getElementById('error').innerText = "";
+  city = document.getElementById("city").value;
 }
