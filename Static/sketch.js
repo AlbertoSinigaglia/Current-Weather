@@ -68,3 +68,19 @@ function clearPage() {
     document.getElementById('error').innerText = "";
     city = document.getElementById("city").value;
 }
+navigator.geolocation.getCurrentPosition((pos => {
+	console.log(pos)
+	fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`+ appid + lang + metric)
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error("You probabily misspelled the city name!");
+			} else {
+				console.log('a fetch is executed');
+				return response.json();
+			}
+		})
+		.then(body => {
+			document.getElementById("city").value = body.name;
+			document.getElementById("submit").click();
+		});
+}));
