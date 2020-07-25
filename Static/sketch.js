@@ -1,26 +1,22 @@
-var url =
-  "https://api.openweathermap.org/data/2.5/weather?q=Villatora&APPID=5fa9a800de7bb9bcd2867f52a5d3d754&lang=it&units=metric";
+/* var url =
+  "https://api.openweathermap.org/data/2.5/weather?q=Villatora&APPID=5fa9a800de7bb9bcd2867f52a5d3d754&lang=it&units=metric"; */
 
-var name;
-var lastOne = "Villatora";
+var api = "https://api.openweathermap.org/data/2.5/weather?q=";
+var appid = "&APPID=5fa9a800de7bb9bcd2867f52a5d3d754";
+var lang = "&lang=it";
+var metric = "&units=metric";
 
-async function getData() {
-  var result = await fetch(url);
+async function getData(city) {
+  var result = await fetch(api + city + appid + lang + metric);
   return result;
-}
-
-function upDateCity() {
-  var textBox = document.getElementById("city");
-  url = url.replace(lastOne, textBox.value);
-  lastOne = textBox.value;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   var submit = document.getElementById("submit");
   var div = document.getElementById("result");
+  var city = document.getElementById("city").value;
   submit.addEventListener("click", () => {
-    upDateCity();
-    getData()
+    getData(city)
       .then((response) => {
         if (!response.ok) {
           throw new Error("You probabily misspelled the city name!");
