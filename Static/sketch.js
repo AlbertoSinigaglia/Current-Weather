@@ -1,78 +1,117 @@
-/* var url =
-    "https://api.openweathermap.org/data/2.5/weather?q=Villatora&APPID=5fa9a800de7bb9bcd2867f52a5d3d754&lang=it&units=metric"; */
+class WeatherAPI{
+    constructor(id, lang = 'it', unit = 'metric', apiImageFormat = "@2x.png"){
+        this.id = id;
+        this.lang = lang;
+        this.unit = unit;
+        this.apiImageFormat = apiImageFormat;
+        this.cache = new Map();
+    }
+    setId(value){
+        this.id = value;
+        return this;
+    }
+    setLang(value){
+        this.lang = value;
+        return this;
+    }
+    setUnit(value){
+        this.unit = value;
+        return this;
+    }
+    make(request, method = 'GET'){
+    
+         if(this.cache.has(JSON.stringify(request)))
+             return Promise.resolve(this.cache.get(JSON.stringify(request)));
 
-/* URL FOR THE FORECAST */
-var api = "https://api.openweathermap.org/data/2.5/weather?q=";
-var appid = "&APPID=5fa9a800de7bb9bcd2867f52a5d3d754";
-var lang = "&lang=it";
-var metric = "&units=metric";
-
-/* URL FOR THE ICONS */
-var source = "http://openweathermap.org/img/wn/";
-var format = "@2x.png";
-
-var lastCity = " ";
-var city;
-var cache = [];
-document.addEventListener("DOMContentLoaded", () => {
-	var submit = document.getElementById("submit");
-	
-
-	
-	navigator.geolocation.getCurrentPosition((pos => {
-		fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`+ appid + lang + metric)
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error("You probabily misspelled the city name!");
-				} else {
-					return response.json();
-				}
-			})
-			.then(body => {
-				document.getElementById("city").value = body.name.trim().toLowerCase();
-				document.getElementById("submit").click();
-			});
-	}), (err => console.log(err)),{
-		enableHighAccuracy: false,
-		timeout: 10000,
-		maximumAge: 0
-	});
-
-
-
-    submit.addEventListener("click", () => {
-        clearPage();
-        let promise = cache[city] ?  
-            new Promise((resolve, reject) => resolve(cache[city])) : 
-            getData(city).then((response) => {
-                if (!response.ok) {
-                    throw new Error("You probabily misspelled the city name!");
-                } else {
-                    return response.json();
+        let url = new URL(WeatherAPI.apiUrl);
+        let req = {
+            ...request,
+            lang: this.lang,
+            APPID: this.id,
+            units : this.unit
+        }
+        let prom = null;
+        switch(method.toLowerCase().trim()){
+            case 'get':
+                url.search = new URLSearchParams(req).toString();
+                prom = fetch(url);
+            case 'post':
+                prom = fetch(url, {
+                    method: 'POST',
+                    body: req
+                })
+        }
+         return prom
+            .then(resp => {
+                if (!resp.ok) 
+					throw new Error("Il nome inserito non è stato trovato");
+			    else {
+                    let obj = resp.json();
+                    this.cache.set(JSON.stringify(request), obj)    
+                    return obj;
                 }
+            })
+    }
+    byCity(city){
+        return this.make({
+            q : city
+        })
+    }
+    byLatLong({lat, long}){
+        return this.make({
+            lat: lat,
+            lon: long
+        })
+    }
+    icon(icon){
+        return WeatherAPI.apiImageUrl + icon + this.apiImageFormat;
+    }
+    static get apiUrl(){
+        return "https://api.openweathermap.org/data/2.5/weather";
+    }
+    static get apiImageUrl(){
+        return "http://openweathermap.org/img/wn/";
+    }
+}
+var wapi = new WeatherAPI('5fa9a800de7bb9bcd2867f52a5d3d754')
+document.addEventListener("DOMContentLoaded", () => {
+	navigator.geolocation.getCurrentPosition(
+        pos => {
+            wapi.byLatLong({
+                lat : pos.coords.latitude,
+                long: pos.coords.longitude
             }).then(body => {
-				cache[city] = body;
-				return body;
-			});
-        promise.then((data) => {
+                document.getElementById("city").value = body.name.trim().toLowerCase();
+                document.getElementById("submit").click();
+            });
+        }, 
+        err => console.log(err), 
+        {
+            enableHighAccuracy: false,
+            timeout: 10000,
+            maximumAge: 0
+        }
+    );
+    document.getElementById("submit").addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        clearPage();
+        let city = (document.getElementById("city").value || "").trim().toLowerCase();
+        wapi.byCity(city).then((data) => {
             generateDescription(data.weather[0].description)
             generateIcon(data.weather[0].icon);
             generateTemperatures(data.main);
         })
         .catch((err) => {
+            console.error(err)
             document.getElementById('error').innerText = err.message;
         });
     });
 });
 
-async function getData(city) {
-    var result = await fetch(api + city + appid + lang + metric);
-    return result;
-}
-
 function generateIcon(iconId) {
-    var image = document.createElement('img');
-    image.setAttribute('src', source + iconId + format);
+    let image = document.createElement('img');
+    image.setAttribute('src', wapi.icon(iconId));
     image.setAttribute('Alt', "Weather Icon");
     document.getElementById('icon').appendChild(image);
 }
@@ -89,5 +128,4 @@ function generateTemperatures(main) {
 function clearPage() {
     document.getElementById('icon').innerHTML = "";
     document.getElementById('error').innerText = "";
-    city = (document.getElementById("city").value || "").trim().toLowerCase();
 }
