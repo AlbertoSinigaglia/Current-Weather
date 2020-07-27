@@ -18,7 +18,7 @@ class WeatherAPI{
         this.unit = value;
         return this;
     }
-    make(request, method = 'GET'){
+    async make(request, method = 'GET'){
     
          if(this.cache.has(JSON.stringify(request)))
              return Promise.resolve(this.cache.get(JSON.stringify(request)));
