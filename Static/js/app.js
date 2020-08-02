@@ -153,14 +153,6 @@ function createOptions() {
     })
 }
 
-function swap(json) {
-    var ret = {};
-    for (var key in json) {
-        ret[json[key]] = key;
-    }
-    return ret;
-}
-
 async function getLang() {
     var choice = dom.languages.value;
     var lang = languagesList().then(resp => {
