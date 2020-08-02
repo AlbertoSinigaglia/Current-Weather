@@ -20,17 +20,17 @@ class WeatherAPI {
     }
 
     async make(request, method = 'GET') {
-
-        if (this.cache.has(JSON.stringify(request)))
-            return Promise.resolve(this.cache.get(JSON.stringify(request)));
-
-        let url = new URL(WeatherAPI.apiUrl);
         let req = {
             ...request,
             lang: this.lang,
             APPID: this.id,
             units: this.unit
         }
+        if (this.cache.has(JSON.stringify(req)))
+            return Promise.resolve(this.cache.get(JSON.stringify(req)));
+
+        let url = new URL(WeatherAPI.apiUrl);
+        
         let prom = null;
         switch (method.toLowerCase().trim()) {
             case 'get':
@@ -48,7 +48,7 @@ class WeatherAPI {
                     throw new Error("Il nome inserito non è stato trovato");
                 else {
                     let obj = resp.json();
-                    this.cache.set(JSON.stringify(request), obj);
+                    this.cache.set(JSON.stringify(req), obj);
                     return obj;
                 }
             })
