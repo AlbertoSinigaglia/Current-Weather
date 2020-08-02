@@ -113,10 +113,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     createOptions();
     document.querySelector("#languages").addEventListener('change', () => {
-        var select = getLang();
-        console.log(select);
-        /* console.log(wapi.setLang(getLang())); */
-
+        getLang().then(lang => {
+            wapi.setLang(lang);
+        });
     });
 });
 
@@ -152,15 +151,12 @@ function swap(json) {
     return ret;
 }
 
-function getLang() {
+async function getLang() {
     var choice = document.querySelector("#languages").value;
     var lang = languagesList().then(resp => {
-        return resp.languages;
+        return resp.languages[choice];
     })
-    lang.then(resp => {
-        console.log(resp[choice]);
-        return resp[choice];
-    })
+    return lang;
 }
 
 function generateDescription(description) {
