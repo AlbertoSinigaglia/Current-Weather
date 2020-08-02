@@ -154,11 +154,8 @@ function createOptions() {
 }
 
 async function getLang() {
-    var choice = dom.languages.value;
-    var lang = languagesList().then(resp => {
-        return resp.languages[choice];
-    })
-    return lang;
+    return languagesList()
+               .then(resp => resp.languages[dom.languages.value]);
 }
 
 function generateDescription(description) {
