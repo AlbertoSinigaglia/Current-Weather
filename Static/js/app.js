@@ -76,16 +76,32 @@ class WeatherAPI {
     }
 }
 
+
+const dom = {}
 var wapi = new WeatherAPI('5fa9a800de7bb9bcd2867f52a5d3d754');
 document.addEventListener("DOMContentLoaded", () => {
+    dom.lang      = document.getElementById("lang");
+    dom.languages = document.getElementById("languages");
+    dom.city      = document.getElementById("city");
+    dom.button    = document.getElementById("submit");
+    dom.error     = document.getElementById("error");
+    dom.result    = document.getElementById("result")
+    dom.icon      = document.getElementById("icon")
+    dom.min       = document.getElementById("min")
+    dom.max       = document.getElementById("max")
+    /*
+            o se preferisci:
+            ["lang", "languages", "city", "submit", "error", "result", "icon", "min", "max"]
+                .forEach(el => dom[el] = document.getElementById(el))
+     */
     navigator.geolocation.getCurrentPosition(
         pos => {
             wapi.byLatLong({
                 lat: pos.coords.latitude,
                 long: pos.coords.longitude
             }).then(body => {
-                document.getElementById("city").value = body.name.trim().toLowerCase();
-                document.getElementById("submit").click();
+                dom.city.value = body.name.trim().toLowerCase();
+                dom.button.click();
             });
         },
         err => console.log(err),
@@ -96,11 +112,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     );
 
-    document.getElementById("submit").addEventListener("click", (e) => {
+    dom.button.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
         clearPage();
-        let city = (document.getElementById("city").value || "").trim().toLowerCase();
+        let city = (dom.city.value || "").trim().toLowerCase();
         wapi.byCity(city).then((data) => {
             generateDescription(data.weather[0].description)
             generateIcon(data.weather[0].icon);
@@ -108,11 +124,11 @@ document.addEventListener("DOMContentLoaded", () => {
         })
             .catch((err) => {
                 console.error(err)
-                document.getElementById('error').innerText = err.message;
+                error.innerText = err.message;
             });
     });
     createOptions();
-    document.querySelector("#languages").addEventListener('change', () => {
+    dom.languages.addEventListener('change', () => {
         getLang().then(lang => {
             wapi.setLang(lang);
         });
@@ -120,9 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function languagesList() {
-    let prom = null;
-    prom = fetch("Static/json/languages.json");
-    return prom
+    return fetch("Static/json/languages.json")
         .then(resp => {
             let list = resp.json();
             return list;
@@ -134,12 +148,8 @@ async function languagesList() {
 
 function createOptions() {
     languagesList().then(resp => {
-        var data = resp.languageList;
-        var list = "";
-        for (var i = 0; i < data.length; i++) {
-            list += `<option>${data[i]}</option>` + '\n'
-        }
-        document.querySelector('#lang').innerHTML = list;
+        lang.innerHTML = 
+            resp.languageList.reduce((acc, el) => acc + `<option>${el}</option>`, "");
     })
 }
 
@@ -152,7 +162,7 @@ function swap(json) {
 }
 
 async function getLang() {
-    var choice = document.querySelector("#languages").value;
+    var choice = dom.languages.value;
     var lang = languagesList().then(resp => {
         return resp.languages[choice];
     })
@@ -160,22 +170,22 @@ async function getLang() {
 }
 
 function generateDescription(description) {
-    document.getElementById('result').innerText = description;
+    dom.result.innerText = description;
 }
 
 function generateIcon(iconId) {
     let image = document.createElement('img');
     image.setAttribute('src', wapi.icon(iconId));
     image.setAttribute('Alt', "Weather Icon");
-    document.getElementById('icon').appendChild(image);
+    dom.icon.appendChild(image);
 }
 
 function generateTemperatures(main) {
-    document.getElementById('min').innerText = "Min: " + main.temp_min;
-    document.getElementById('max').innerText = "Max: " + main.temp_max;
+    dom.min.innerText = "Min: " + main.temp_min;
+    dom.max.innerText = "Max: " + main.temp_max;
 }
 
 function clearPage() {
-    document.getElementById('icon').innerHTML = "";
-    document.getElementById('error').innerText = "";
+    dom.icon.innerHTML = "";
+    dom.error.innerText = "";
 }
