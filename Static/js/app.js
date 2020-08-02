@@ -137,13 +137,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function languagesList() {
     return fetch("Static/json/languages.json")
-        .then(resp => {
-            let list = resp.json();
-            return list;
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        .then(resp => resp.json())
+        .catch(err => console.log(err))
 }
 
 function createOptions() {
