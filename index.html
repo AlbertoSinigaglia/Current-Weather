@@ -4,58 +4,91 @@
         <meta charset="utf-8" />
         <title>Weather forecast</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="./Static/css/index.css" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<link rel="stylesheet" href="./Static/css/index.css" />
         <script src="./Static/./js/app.js" type="text/javascript"></script>
     </head>
     <body>
-		<div>
-			<div class="header">
-				<div class="city">
-					City: <input id="city" value=""></input>
+		<div class="container" style="max-width: 500px;">
+			<div class="row">
+				<div class="header col-12 border-bottom-0 p-4">
+					<div class="row">
+						<div class="pt-2 m-0 col-12 text-center pb-3">
+							<caption><h2>Previsioni Meteo</h2></caption>
+						</div>
+						<div class="city col-12">
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+								  	<span class="input-group-text">Citt&aacute;</span>
+								</div>
+								<input type="text" class="form-control" id="city">
+							</div>
+						</div>
+						<div class="city col-12">
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+								  	<span class="input-group-text">Lingua</span>
+								</div>
+								<input type="text" class="form-control" id="languages"  list="lang" style="border-radius: .25rem; border-top-left-radius: 0; border-bottom-left-radius: 0;">
+								<datalist id="lang"></datalist>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<button class="btn btn-primary w-100" id='submit'>Visualizza</button>
+						</div>
+					</div>
 				</div>
 
-				<div class="languages">
-					Language: 
-					<input id="languages" type="text" list="lang">
-					<datalist id="lang"></datalist>
+				<div class="table col-12 p-4">
+					<div class="col-12">
+						<div class="col-12 pt-3">
+							<p class="font-weight-bold" id="day">
+								Le previsioni di oggi
+							</p>
+						</div>
+					
+						<div class="col-12">
+							<div class="row">
+								<div class="col-6 text-right d-flex" style="justify-content: flex-end; align-items: center;">
+									<p>Descrizione:</p>
+								</div>
+								<div class="col-6  text-left">
+									<p id="result">N.D.</p>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<div class="col-12">
+							<div class="row">
+								<div class="col-6 text-right d-flex" style="justify-content: flex-end; align-items: center;">
+									<p>Rappresentazione:</p>
+								</div>
+								<div class="col-6 text-left">
+									<p id="icon">N.D.</p>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<div class="col-12">
+							<div class="row">
+								<div class="col-6 text-right d-flex" style="justify-content: flex-end; align-items: center;">
+									<p>Temperatura:</p>
+								</div>
+								<div class="col-6">
+									<div class="col-12 text-left">
+										<p id="min">N.D.</p>
+									</div>
+									<div class="col-12 text-left">
+										<p id="max">N.D.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="error"></div>
 				</div>
-				
-
-
-				<div class="clearfix"></div>
-				
-				<button id='submit'>Submit</button>
-			</div>
-
-			<div class="table">
-				<caption><h2>Previsioni Meteo</h2></caption>
-				<table>
-					<tr>
-						<th colspan= "2" id="day">
-							Oggi
-						</th>
-					</tr>
-				
-					<tr>
-						<th>Descrizione:</th>
-						<td id="result"></td>
-					</tr>
-				
-					<tr>
-						<th>Rappresentazione:</th>
-						<td id="icon"></td>
-					</tr>
-				
-					<tr>
-						<th rowspan="2" style="padding:12px">Temperatura:</th>
-						<td id="min"></td>
-					</tr>
-					<tr>
-						<td id="max"></td>
-					</tr>
-				</table>
-
-				<div id="error"></div>
 			</div>
 		</div>
     </body>
