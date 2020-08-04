@@ -81,7 +81,6 @@ const dom = {}
 var wapi = new WeatherAPI('5fa9a800de7bb9bcd2867f52a5d3d754');
 document.addEventListener("DOMContentLoaded", () => {
     dom.lang      = document.getElementById("lang");
-    dom.languages = document.getElementById("languages");
     dom.city      = document.getElementById("city");
     dom.button    = document.getElementById("submit");
     dom.error     = document.getElementById("error");
@@ -128,9 +127,12 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     });
     createOptions();
-    dom.languages.addEventListener('change', () => {
+
+      
+    dom.lang.addEventListener('change', () => {
         getLang().then(lang => {
             wapi.setLang(lang);
+            dom.button.click()
         });
     });
 });
@@ -142,15 +144,18 @@ async function languagesList() {
 }
 
 function createOptions() {
-    languagesList().then(resp => {
-        lang.innerHTML = 
-            resp.languageList.reduce((acc, el) => acc + `<option>${el}</option>`, "");
-    })
+    languagesList().then(
+        list => {
+            dom.lang.innerHTML = Object.entries(list.languages).reduce((prev, [name, key])=> prev + `<option data-content='<img class="pr-2" src=\"https://flagcdn.com/16x12/${key}.png\">${name}'>${name}</option>`)
+            $(dom.languages).selectpicker("refresh");
+        }
+    )
+    
 }
 
 async function getLang() {
     return languagesList()
-               .then(resp => resp.languages[dom.languages.value]);
+               .then(resp => resp.languages[dom.lang.options[dom.lang.selectedIndex].value]);
 }
 
 function generateDescription(description) {
