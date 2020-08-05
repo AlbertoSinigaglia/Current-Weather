@@ -79,7 +79,7 @@ class WeatherAPI {
 
 const dom = {}
 var wapi = new WeatherAPI('5fa9a800de7bb9bcd2867f52a5d3d754');
-document.addEventListener("DOMContentLoaded", () => {
+$(() => {
     dom.lang      = document.getElementById("lang");
     dom.city      = document.getElementById("city");
     dom.button    = document.getElementById("submit");
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     dom.min       = document.getElementById("min")
     dom.max       = document.getElementById("max")
 
-    dom.languages.setAttribute("value", "English");
+    dom.lang.setAttribute("value", "English");
     /*
             o se preferisci:
             ["lang", "languages", "city", "submit", "error", "result", "icon", "min", "max"]
@@ -150,8 +150,8 @@ async function languagesList() {
 function createOptions() {
     languagesList().then(
         list => {
-            dom.lang.innerHTML = Object.entries(list.languages).reduce((prev, [name, key])=> prev + `<option data-content='<img class="pr-2" src=\"https://flagcdn.com/16x12/${key}.png\">${name}'>${name}</option>`)
-            $(dom.languages).selectpicker("refresh");
+            dom.lang.innerHTML = Object.entries(list.languages).reduce((prev, [name, key], i)=> prev + `<option ${!i?"selected":""} data-content='<img class="pr-2" src=\"https://flagcdn.com/16x12/${key}.png\">${name}'>${name}</option>`, "")
+            $(dom.lang).selectpicker("refresh")
         }
     )
     
