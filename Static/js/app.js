@@ -88,6 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
     dom.icon      = document.getElementById("icon")
     dom.min       = document.getElementById("min")
     dom.max       = document.getElementById("max")
+
+    dom.languages.setAttribute("value", "English");
     /*
             o se preferisci:
             ["lang", "languages", "city", "submit", "error", "result", "icon", "min", "max"]
@@ -126,6 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 error.innerText = err.message;
             });
     });
+
     createOptions();
 
       
@@ -134,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
             wapi.setLang(lang);
             dom.button.click()
         });
+        dom.button.click();
     });
 });
 
