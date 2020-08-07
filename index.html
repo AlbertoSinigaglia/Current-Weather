@@ -20,85 +20,134 @@
 			.dropdown.bootstrap-select{
 				width:100% !important;
 			}
+			body{
+				padding:10px;
+				background-color:#E3F2FD;
+				transition: 1s all linear;
+			}
+			.container{
+				max-width: 1000px;
+				height: 90vh;
+				overflow-x: scroll;
+				display: flex;
+				justify-content: center;
+				padding-top: 60px;
+				border-radius: 40px;
+				background-color: white;
+				box-shadow: 0 1px 1px rgba(0,0,0,0.03), 
+							0 2px 2px rgba(0,0,0,0.03), 
+							0 4px 4px rgba(0,0,0,0.03), 
+							0 8px 8px rgba(0,0,0,0.03), 
+							0 16px 16px rgba(0,0,0,0.03), 
+							0 32px 32px rgba(0,0,0,0.03);
+			}
+			.container > .row{
+				max-width: 1000px;
+				border-radius: 10px;
+				position: relative;
+			}
+			.container > .row > * > *{
+				transition: 1s all linear;
+				border-width: 0px;
+			}
+			#icon{
+				width: 100px;
+				height: 100px;
+				padding:0px;
+				margin:0px;
+				line-height: 100px;
+			}
+			.col-6 > p {
+				margin:0;
+				padding:0;
+			}
+			button.btn.dropdown-toggle.btn-light{
+				color: #495057;
+				background-color: #fff;
+				border: 1px solid #ced4da;
+				border-radius: .25rem;
+			}
 		</style>
 	</head>
     <body>
-		<div class="container" style="max-width: 500px;">
+		<div class="container" >
 			<div class="row">
-				<div class="header col-12 border-bottom-0 p-4">
-					<div class="row">
-						<div class="pt-2 m-0 col-12 text-center pb-3">
-							<caption><h2>Previsioni Meteo</h2></caption>
-						</div>
-						<div class="city col-12">
-							<div class="form-group mb-3">
-								<span class="h5 w-100">Citt&aacute;</span>
-								<input type="text" class="form-control mr-0 pr-0 w-100" style="max-width: unset;" id="city" placeholder="Inserisci città">
+				<div class="col-12">
+					<div class="header col-12 border-bottom-0 p-4">
+						<div class="row">
+							<div class="pt-2 m-0 col-12 text-center pb-3">
+								<caption><h2 class="h1" style="font-size: 3em;">Previsioni Meteo</h2></caption>
+							</div>
+							<div class="city col-12">
+								<div class="form-group mb-3">
+									<span class="h5 w-100">Citt&aacute;</span>
+									<input type="text" class="form-control mr-0 pr-0 w-100" style="max-width: unset;" id="city" placeholder="Inserisci città">
+								</div>
+							</div>
+							<div class="city col-12">
+								<div class="input-group mb-3 ">
+									<span class="h5 w-100">Lingua</span>
+
+									<select class="selectpicker" id="lang">
+									</select>
+								</div>
 							</div>
 						</div>
-						<div class="city col-12">
-							<div class="input-group mb-3 ">
-								<span class="h5 w-100">Lingua</span>
-
-								<select class="selectpicker" id="lang">
-								</select>
+						<div class="row">
+							<div class="col-12">
+								<button class="btn btn-primary w-100" id='submit'>Visualizza</button>
 							</div>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-12">
-							<button class="btn btn-primary w-100" id='submit'>Visualizza</button>
-						</div>
-					</div>
-				</div>
 
-				<div class="table col-12 p-4">
-					<div class="col-12">
-						<div class="col-12 pt-3">
-							<p class="font-weight-bold" id="day">
-								Le previsioni di oggi
-							</p>
-						</div>
-					
+					<div class="table col-12 p-4">
 						<div class="col-12">
-							<div class="row">
-								<div class="col-6 text-right d-flex" style="justify-content: flex-end; align-items: center;">
-									<p>Descrizione:</p>
-								</div>
-								<div class="col-6  text-left">
-									<p id="result">N.D.</p>
-								</div>
+							<div class="col-12 pt-3">
+								<p class="font-weight-bold" id="day">
+									Le previsioni di oggi
+								</p>
 							</div>
-						</div>
-						<hr>
-						<div class="col-12">
-							<div class="row">
-								<div class="col-6 text-right d-flex" style="justify-content: flex-end; align-items: center;">
-									<p>Rappresentazione:</p>
-								</div>
-								<div class="col-6 text-left">
-									<p id="icon">N.D.</p>
-								</div>
-							</div>
-						</div>
-						<hr>
-						<div class="col-12">
-							<div class="row">
-								<div class="col-6 text-right d-flex" style="justify-content: flex-end; align-items: center;">
-									<p>Temperatura:</p>
-								</div>
-								<div class="col-6">
-									<div class="col-12 text-left">
-										<p id="min">N.D.</p>
+						
+							<div class="col-12">
+								<div class="row">
+									<div class="col-6 text-right d-flex" style="justify-content: flex-end; align-items: center;">
+										<p>Descrizione:</p>
 									</div>
-									<div class="col-12 text-left">
-										<p id="max">N.D.</p>
+									<div class="col-6  text-left">
+										<p id="result">N.D.</p>
 									</div>
 								</div>
 							</div>
+							<hr>
+							<div class="col-12">
+								<div class="row">
+									<div class="col-6 text-right d-flex" style="justify-content: flex-end; align-items: center;">
+										<p>Rappresentazione:</p>
+									</div>
+									<div class="col-6 text-left">
+										<p id="icon">N.D.</p>
+									</div>
+								</div>
+							</div>
+							<hr>
+							<div class="col-12">
+								<div class="row">
+									<div class="col-6 text-right d-flex" style="justify-content: flex-end; align-items: center;">
+										<p>Temperatura:</p>
+									</div>
+									<div class="col-6">
+										<div class="col-12 p-0 m-0 text-left">
+											<p id="min">N.D.</p>
+										</div>
+										<div class="col-12 p-0 m-0 text-left">
+											<p id="max">N.D.</p>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
+						<div id="error"></div>
 					</div>
-					<div id="error"></div>
 				</div>
 			</div>
 		</div>

@@ -118,6 +118,7 @@ $(() => {
         clearPage();
         let city = (dom.city.value || "").trim().toLowerCase();
         wapi.byCity(city).then((data) => {
+            generateBackground(data.weather[0].id)
             generateDescription(data.weather[0].description)
             generateIcon(data.weather[0].icon);
             generateTemperatures(data.main);
@@ -144,7 +145,18 @@ async function languagesList() {
         .then(resp => resp.json())
         .catch(err => console.log(err))
 }
-
+function generateBackground(val){
+    var background = {
+        '2XX': '#37444e',
+        '3XX': '#487ca5',
+        '5XX': '#a2acb8',
+        '6XX': '#e8e8e8',
+        '7XX': '#c1bbbb',
+        '800': '#84ccff',
+        '8XX': '#7e8da4',
+    }
+    document.querySelector('body').style.backgroundColor = background[val == 800 ? val : Math.floor(val / 100) + "XX"] || '#000000';
+}
 function createOptions() {
     languagesList().then(
         list => {
