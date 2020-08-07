@@ -148,7 +148,7 @@ async function languagesList() {
 function createOptions() {
     languagesList().then(
         list => {
-            dom.lang.innerHTML = Object.entries(list.languages).reduce((prev, [name, key]) => prev + `<option data-content='<img class="pr-2" src=\"https://flagcdn.com/16x12/${list.flagMap[key]}.png\">${name}'>${name}</option>`, "");
+            dom.lang.innerHTML = Object.entries(list.languages).reduce((prev, [name, key]) => prev + `<option data-content='<img class="pr-2" src=\"https://flagcdn.com/28x21/${list.flagMap[key]}.png\">${name}'>${name}</option>`, "");
             $(dom.lang).selectpicker("refresh")
         }
     )
