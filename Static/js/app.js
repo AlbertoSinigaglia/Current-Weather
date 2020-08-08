@@ -30,7 +30,6 @@ class WeatherAPI {
             return Promise.resolve(this.cache.get(JSON.stringify(req)));
 
         let url = new URL(WeatherAPI.apiUrl);
-        
         let prom = null;
         switch (method.toLowerCase().trim()) {
             case 'get':
@@ -101,7 +100,7 @@ $(() => {
                 lat: pos.coords.latitude,
                 long: pos.coords.longitude
             }).then(body => {
-                dom.city.value = body.name.trim().toLowerCase();
+                dom.city.value = body.name.trim();
                 dom.button.click();
             });
         },
@@ -119,6 +118,7 @@ $(() => {
         clearPage();
         let city = (dom.city.value || "").trim().toLowerCase();
         wapi.byCity(city).then((data) => {
+            generateBackground(data.weather[0].id)
             generateDescription(data.weather[0].description)
             generateIcon(data.weather[0].icon);
             generateTemperatures(data.main);
@@ -137,7 +137,6 @@ $(() => {
             wapi.setLang(lang);
             dom.button.click()
         });
-        dom.button.click();
     });
 });
 
@@ -146,11 +145,22 @@ async function languagesList() {
         .then(resp => resp.json())
         .catch(err => console.log(err))
 }
-
+function generateBackground(val){
+    var background = {
+        '2XX': '#37444e',
+        '3XX': '#487ca5',
+        '5XX': '#a2acb8',
+        '6XX': '#e8e8e8',
+        '7XX': '#c1bbbb',
+        '800': '#84ccff',
+        '8XX': '#7e8da4',
+    }
+    document.querySelector('body').style.backgroundColor = background[val == 800 ? val : Math.floor(val / 100) + "XX"] || '#000000';
+}
 function createOptions() {
     languagesList().then(
         list => {
-            dom.lang.innerHTML = Object.entries(list.languages).reduce((prev, [name, key], i)=> prev + `<option ${!i?"selected":""} data-content='<img class="pr-2" src=\"https://flagcdn.com/16x12/${key}.png\">${name}'>${name}</option>`, "")
+            dom.lang.innerHTML = Object.entries(list.languages).reduce((prev, [name, key]) => prev + `<option data-content='<img class="pr-2" src=\"https://flagcdn.com/28x21/${list.flagMap[key]}.png\">${name}'>${name}</option>`, "");
             $(dom.lang).selectpicker("refresh")
         }
     )
@@ -159,7 +169,7 @@ function createOptions() {
 
 async function getLang() {
     return languagesList()
-               .then(resp => resp.languages[dom.lang.options[dom.lang.selectedIndex].value]);
+        .then(resp => resp.languages[dom.lang.options[dom.lang.selectedIndex].value]);
 }
 
 function generateDescription(description) {
@@ -174,8 +184,8 @@ function generateIcon(iconId) {
 }
 
 function generateTemperatures(main) {
-    dom.min.innerText = "Min: " + main.temp_min;
-    dom.max.innerText = "Max: " + main.temp_max;
+    dom.min.innerText = "Min: " + Math.floor(main.temp_min) + "°C";
+    dom.max.innerText = "Max: " + Math.floor(main.temp_max) + "°C";
 }
 
 function clearPage() {
